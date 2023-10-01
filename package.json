@@ -1,26 +1,38 @@
 {
-  "name": "symsec",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "SymSec is a Node.js utility for symmetric key encryption with message integrity verification of JSON objects, providing a secure and straightforward way to store or transmit sensitive data.",
-  "main": "src/index.ts",
-  "scripts": {
-    "build": "tsc",
-    "test": "tsc __tests__/node/index.test.ts"
-  },
-  "keywords": [
-    "json",
-    "secure",
-    "encryption",
-    "symmetric",
-    "integrity",
-    "verification"
-  ],
-  "author": "Ayush Sharma",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/jest": "^29.4.0",
-    "@types/node": "^18.14.1",
-    "typescript": "^4.9.5"
-  }
+    "name": "symsec",
+    "version": "1.0.0",
+    "description": "SymSec is a Node.js utility for symmetric key encryption with message integrity verification of JSON objects, providing a secure and straightforward way to store or transmit sensitive data.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "prepare": "npm run build",
+        "test": "npx mocha --require ts-node '__tests__/node/index.test.ts'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/belphegor-s/symsec"
+    },
+    "keywords": [
+        "json",
+        "secure",
+        "encryption",
+        "symmetric",
+        "integrity",
+        "verification"
+    ],
+    "author": "Ayush Sharma <ayush2162020@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/belphegor-s/symsec/issues"
+    },
+    "homepage": "https://github.com/belphegor-s/symsec#symsec",
+    "devDependencies": {
+        "@types/chai": "^4.3.6",
+        "@types/mocha": "^10.0.2",
+        "@types/node": "^18.14.1",
+        "chai": "^4.3.10",
+        "mocha": "^10.2.0",
+        "typescript": "^4.9.5"
+    }
 }

@@ -1,4 +1,4 @@
-import { randomBytes, createCipheriv, createDecipheriv, CipherGCM } from "crypto";
+import { randomBytes, createCipheriv, createDecipheriv } from "crypto";
 
 interface SealedJSON {
     data: string;

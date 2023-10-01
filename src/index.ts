@@ -9,19 +9,23 @@ interface SealedJSON {
 const ALGORITHM = 'aes-256-gcm';
 
 class SymSec {
-    private secretKey: string;
+    private secretKey: Buffer;
 
     constructor(secretKey: string) {
-        this.secretKey = secretKey
+        if (secretKey.length !== 64) {
+            throw new Error('Invalid key length. The secretKey must be 32 bytes in hexadecimal format.');
+        }
+
+        this.secretKey = Buffer.from(secretKey, 'hex');
     }
 
-    private getSecretKey(): string {
+    private getSecretKey(): Buffer {
         return this.secretKey;
     }
 
     seal(data: object): SealedJSON {
         const iv = randomBytes(32);
-        const cipher: CipherGCM = createCipheriv(ALGORITHM, this.getSecretKey(), iv);
+        const cipher = createCipheriv(ALGORITHM, this.getSecretKey(), iv);
 
         const jsonData = JSON.stringify(data);
 
@@ -34,13 +38,16 @@ class SymSec {
         return { data: encryptedData, iv: iv.toString("hex"), tag };
     }
 
-    unseal(sealedJson: SealedJSON, secretKey: string): object {
-        const decipher = createDecipheriv(ALGORITHM, secretKey, Buffer.from(sealedJson.iv, "hex"));
+    unseal(sealedJson: SealedJSON): object {
+        const iv = Buffer.from(sealedJson.iv, 'hex');
+        const tag = Buffer.from(sealedJson.tag, 'hex');
+        const decipher = createDecipheriv(ALGORITHM, this.getSecretKey(), iv);
+        decipher.setAuthTag(tag);
+        
+        const decryptedData = decipher.update(sealedJson.data, 'hex', 'utf-8');
+        const originalData = JSON.parse(decryptedData + decipher.final('utf-8'));
 
-        let decryptedData = decipher.update(sealedJson.data, "hex", "utf8");
-        decryptedData += decipher.update(Buffer.from(sealedJson.tag, "hex"));
-        decryptedData += decipher.final("utf8");
-        return JSON.parse(decryptedData);
+        return originalData;
     }
 }
 
